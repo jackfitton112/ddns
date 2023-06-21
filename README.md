@@ -4,13 +4,14 @@ This script will update the DNS record for a given domain with the current publi
 
 This can be used to create a dynamic DNS service for your home network if your ISP does not provide a static IP address or if you are using a VPN service.
 
+---
 ## Requirements
 
 * Python 3
 * Cloudflare account
 * Cloudflare API key
 * Cloudflare zone ID for the domain you want to update
-
+---
 ## Installation
 
 Make sure you have created a .env file in the same directory as the script with the following variables:
@@ -20,7 +21,7 @@ CF_API_KEY= YOUR_API_KEY
 CF_ZONE_ID= YOUR_ZONE_ID
 ```
 
-
+---
 ### Manual Installation
 
 - This script is designed to run in cron, so clone the repo to a location of your choice and add the following line to your crontab:
@@ -30,8 +31,13 @@ CF_ZONE_ID= YOUR_ZONE_ID
 ```
 > This will run the script every 5 minutes. You can change this to whatever interval you want.
 
+---
 
 ### Docker Installation
+---
+## __This is currently under development and is very inefficient, please use the manual installation for now.__
+---
+> Dockerfile has currently been deleted as it is not working correctly. I will update this when I have fixed it.
 
 run the following command to build the docker image:
 ```sh
