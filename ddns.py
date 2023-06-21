@@ -8,6 +8,7 @@ load_dotenv()
 try:
         CF_API_KEY = os.getenv("CF_API_KEY")
         CF_ZONE_ID = os.getenv("CF_ZONE_ID")
+        print(CF_API_KEY)
 except:
         print("Error loading .env file")
         exit(2)
@@ -28,9 +29,10 @@ def TestAPI():
 
         x = requests.get(url, headers = headers)
         response = json.loads(x.text)
-        if response['result']['status'] == "active":
-                return True
-        else:
+        try:
+                if response['result']['status'] == "active":
+                        return True
+        except:
                 return False
 
 def getDomainDNSRecords():
@@ -44,8 +46,12 @@ def getDomainDNSRecords():
 
         response = requests.get(url, headers = headers)
         data = json.loads(response.text)
-        array = {"ip":data['result'][0]['content'], "id":data['result'][0]['id']}
-        return (array)
+        print(data)
+        try:
+                array = {"ip":data['result'][0]['content'], "id":data['result'][0]['id']}
+                return (array)
+        except:
+                return False
 
 def updateDomainDNSRecords(aRecord):
 
@@ -62,9 +68,10 @@ def updateDomainDNSRecords(aRecord):
         response = requests.put(url, headers = headers, data = json.dumps(data))
 
         #if response is successful return true
-        if response['success'] == True:
-                return True
-        else:
+        try:
+                if response['success'] == True:
+                        return True
+        except:
                 return False
 
 # Check the API is working with the API key
@@ -76,6 +83,10 @@ if TestAPI():
         #get the IP address of the A record for the domain
         SiteArray = getDomainDNSRecords()
 
+        if SiteArray == False:
+                #exit with code 2 if API call fails
+                exit(2)
+
         #assign vars for the site IP and the site ID
         SiteIP = SiteArray['ip']
         SiteID = SiteArray['id']
@@ -84,6 +95,7 @@ if TestAPI():
         else:
 
             if updateDomainDNSRecords(SiteID):
+                print("Updated IP to: " + deviceIP + " from: " + SiteIP)
                 exit(0)
             else:
                 #exit with code 3 if update fails for reason other than API
