@@ -35,7 +35,7 @@ CF_ZONE_ID= YOUR_ZONE_ID
 
 run the following command to build the docker image:
 ```sh
-git clone https://github.com/jackfitton112/ddns.git; cd ddns; docker build -t ddnsImage .; docker run -d --name ddns ddnsImage
+git clone https://github.com/jackfitton112/ddns.git; cd ddns; docker build -t ddnsimage .; docker run -d --name ddns ddnsimage
 
 ```
 
