@@ -35,9 +35,23 @@ CF_ZONE_ID= YOUR_ZONE_ID
 
 run the following command to build the docker image:
 ```sh
-git clone https://github.com/jackfitton112/ddns.git; cd ddns; docker build -t ddnsimage .; docker run -d --name ddns ddnsimage
+git clone https://github.com/jackfitton112/ddns.git; cd ddns
 
 ```
+
+now create a .env file with the variables above and then run:
+
+```sh
+You need to create the .env file in the same directory as the script with the following variables:
+
+```shell
+
+docker build -t ddnsimage .; docker run -d --name ddns ddnsimage
+
+```
+
+
+
 
 This will run the script once and stop the container after completion. To run the script on a schedule, add the following line to your crontab:
 
