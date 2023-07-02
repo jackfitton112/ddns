@@ -6,6 +6,7 @@ RUN pip install python-dotenv requests
 
 # Copy the ddns.py file to the container
 COPY ddns.py /app/ddns.py
+COPY .env /app/.env
 
 WORKDIR /app
 
