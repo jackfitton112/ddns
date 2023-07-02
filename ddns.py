@@ -3,15 +3,16 @@ import json
 from dotenv import load_dotenv
 import os
 
-#load .env file
+#load .env file and get API Key and Zone ID
 load_dotenv()
+
 try:
         CF_API_KEY = os.getenv("CF_API_KEY")
         CF_ZONE_ID = os.getenv("CF_ZONE_ID")
-        print(CF_API_KEY)
 except:
-        print("Error loading .env file")
+        #print("Error loading .env file")
         exit(2)
+
 
 def getIP():
         res = requests.get("https://api.ipify.org?format=json")
@@ -74,33 +75,33 @@ def updateDomainDNSRecords(aRecord):
         except:
                 return False
 
-# Check the API is working with the API key
-if TestAPI():
+def main():
 
-        #get the IP address of the device (Ext IPv4 Address)
-        deviceIP = getIP()
-
-        #get the IP address of the A record for the domain
-        SiteArray = getDomainDNSRecords()
-
-        if SiteArray == False:
-                #exit with code 2 if API call fails
+        #Test API Key
+        if TestAPI() == False:
+                #print("Invalid API Key")
                 exit(2)
 
-        #assign vars for the site IP and the site ID
-        SiteIP = SiteArray['ip']
-        SiteID = SiteArray['id']
-        if deviceIP == SiteIP:
-            exit(0)
-        else:
+        #Get the current IP from A record
+        aRecord = getDomainDNSRecords()["ip"]
 
-            if updateDomainDNSRecords(SiteID):
-                print("Updated IP to: " + deviceIP + " from: " + SiteIP)
+        #get current IP
+        currentIP = getIP()
+
+        #if current IP is not equal to A record IP update A record
+        if currentIP == aRecord:
+                #print("IP is the same")
                 exit(0)
-            else:
-                #exit with code 3 if update fails for reason other than API
-                exit(3)
 
-else:
-        # API Key is not valid or API is down
-        exit(1)
+        #update A record
+        if updateDomainDNSRecords(getDomainDNSRecords()["id"]) == True:
+                #print("A Record Updated")
+                exit(0)
+        else:
+                #print("Error Updating A Record")
+                exit(2)
+
+
+
+#call main function
+main()

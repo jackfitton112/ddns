@@ -1,16 +1,15 @@
 # Dynamic DNS script for Cloudflare domains
 
+![](https://img.shields.io/badge/python-3.8.10-blue)
+![](https://img.shields.io/github/license/jackfitton112/ddns)
+![](https://img.shields.io/github/last-commit/jackfitton112/ddns)
+![](https://img.shields.io/github/issues/jackfitton112/ddns)
+
 This script will update the DNS record for a given domain with the current public IP address of the machine it is running on.
 
 This can be used to create a dynamic DNS service for your home network if your ISP does not provide a static IP address or if you are using a VPN service.
 
----
-## Requirements
 
-* Python 3
-* Cloudflare account
-* Cloudflare API key
-* Cloudflare zone ID for the domain you want to update
 ---
 ## Installation
 
