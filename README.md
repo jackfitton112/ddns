@@ -13,26 +13,48 @@ This can be used to create a dynamic DNS service for your home network if your I
 ---
 ## Installation
 
-Make sure you have created a .env file in the same directory as the script with the following variables:
-
-```shell
-CF_API_KEY= YOUR_API_KEY
-CF_ZONE_ID= YOUR_ZONE_ID
-```
-
 ---
 ### Manual Installation
 
-- This script is designed to run in cron, so clone the repo to a location of your choice and add the following line to your crontab:
+to install the script manually, run the following commands:
+
 
 ```sh
-*/5 * * * * /path/to/script/ddns.py
+git clone https://github.com/jackfitton112/ESPCAM-Doorbell.git;
+cd ESPCAM-Doorbell
 ```
-> This will run the script every 5 minutes. You can change this to whatever interval you want.
+
+install the required packages:
+
+```sh
+pip install -r requirements.txt
+```
+
+
+now create a .env file with the variables above and then run:
+
+```sh
+CF_API_KEY= YOUR_API_KEY
+CF_ZONE_ID= YOUR_ZONE_ID
+FETCH_INTERVAL= 300 (OPTIONAL)
+```
+
+> Fetch interval can be defined in the .env file. If not defined, file will run once and exit.
+
+to run the script manually, run:
+
+```sh
+python3 ddns.py
+```
+or to run in the background:
+
+```sh
+nohup python3 ddns.py &
+```
 
 ---
 
-### Docker Installation
+### Docker Installation (NOT UPDATED)
 
 run the following command to build the docker image:
 ```sh
