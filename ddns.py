@@ -1,21 +1,30 @@
-import requests
-import json
+import json, time, os, asyncio, aiohttp
 from dotenv import load_dotenv
-import os
 
-import asyncio
-import aiohttp
+def load_from_dotenv():
 
-#load .env file and get API Key and Zone ID
-load_dotenv()
+        #load .env file
+        load_dotenv()
 
-try:
+        #set global variables
+        global CF_API_KEY
+        global CF_ZONE_ID
+        global FETCH_INTERVAL
+
+        #get API Key and Zone ID from .env file
         CF_API_KEY = os.getenv("CF_API_KEY")
         CF_ZONE_ID = os.getenv("CF_ZONE_ID")
-except:
-        #print("Error loading .env file")
-        exit(2)
+        FETCH_INTERVAL = os.getenv("FETCH_INTERVAL")
 
+        #if the vars are not set exit with error
+        if CF_API_KEY is None or CF_ZONE_ID is None:
+                assert False, "CF_API_KEY or CF_ZONE_ID is not set"
+        
+        #if file is loaded return true
+        return True
+
+#load .env file
+load_from_dotenv()
 
 async def getIP() -> str:
         res = await aiohttp.request('GET', 'https://api.ipify.org?format=json')
@@ -80,10 +89,10 @@ async def updateDomainDNSRecords(aRecord) -> bool:
 
 async def main():
 
+
         #Test API Key
         if await TestAPI() == False:
-                #print("Invalid API Key")
-                exit(2)
+                assert False, "API Key is not valid"
 
         #Get the current IP from A record
         aRecord = await getDomainDNSRecords()["ip"]
@@ -92,19 +101,22 @@ async def main():
         currentIP = await getIP()
 
         #if current IP is not equal to A record IP update A record
-        if currentIP == aRecord:
-                #print("IP is the same")
-                exit(0)
+        if currentIP != aRecord:
 
-        #update A record
-        if await updateDomainDNSRecords(getDomainDNSRecords()["id"]) == True:
-                #print("A Record Updated")
-                exit(0)
+                #update A record, if not successful exit with error
+                if not(await updateDomainDNSRecords(getDomainDNSRecords()["id"])):
+                        assert False, "Unable to update A record"
+
+        return True
+
+async def runner():
+
+        if FETCH_INTERVAL is None:
+                await main()
         else:
-                #print("Error Updating A Record")
-                exit(2)
+                while True:
+                        await asyncio.run(main())
+                        await asyncio.sleep(int(FETCH_INTERVAL))
 
 
-
-#call main function
-main()
+asyncio.run(runner())
